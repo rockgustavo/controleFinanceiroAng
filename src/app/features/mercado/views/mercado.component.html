@@ -1,0 +1,82 @@
+<div class="container-fluid py-4">
+  <h4 class="mb-4 fw-bold"><i class="bi bi-broadcast me-2"></i>Dados de Mercado</h4>
+
+  @if (error()) { <div class="alert alert-danger">{{ error() }}</div> }
+
+  @if (loading()) {
+    <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+  } @else {
+    @if (indicators(); as ind) {
+      <p class="text-muted small mb-4">Atualizado em {{ fetchedAt() }}</p>
+
+      <div class="row g-3 mb-5">
+        <div class="col-6 col-md-4 col-xl-2">
+          <div class="card border-0 shadow-sm text-center h-100">
+            <div class="card-body py-4">
+              <div class="text-muted small mb-1">Selic (a.a.)</div>
+              <div class="fs-3 fw-bold text-primary">{{ ind.selic != null ? (ind.selic | percentBr) : '—' }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+          <div class="card border-0 shadow-sm text-center h-100">
+            <div class="card-body py-4">
+              <div class="text-muted small mb-1">USD / BRL</div>
+              <div class="fs-3 fw-bold text-warning">{{ ind.usdBrl != null ? (ind.usdBrl | currencyBr : 4) : '—' }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+          <div class="card border-0 shadow-sm text-center h-100">
+            <div class="card-body py-4">
+              <div class="text-muted small mb-1">IBOVESPA</div>
+              <div class="fs-3 fw-bold text-success">{{ ind.ibovespa != null ? (ind.ibovespa | currencyBr : 0) : '—' }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+          <div class="card border-0 shadow-sm text-center h-100">
+            <div class="card-body py-4">
+              <div class="text-muted small mb-1">IVVB11</div>
+              <div class="fs-3 fw-bold text-info">{{ ind.ivvb11 != null ? (ind.ivvb11 | currencyBr : 2) : '—' }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+          <div class="card border-0 shadow-sm text-center h-100">
+            <div class="card-body py-4">
+              <div class="text-muted small mb-1">IPCA (a.a.)</div>
+              <div class="fs-3 fw-bold text-danger">{{ ind.ipca != null ? (ind.ipca | percentBr) : '—' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      @if (tesouro().length > 0) {
+        <h5 class="mb-3">Tesouro Direto</h5>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>Título</th>
+                <th class="text-end">Taxa (%)</th>
+                <th class="text-end">Invest. Mínimo</th>
+                <th>Vencimento</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (t of tesouro(); track t.name) {
+                <tr>
+                  <td class="fw-semibold">{{ t.name }}</td>
+                  <td class="text-end">{{ t.rate | percentBr }}</td>
+                  <td class="text-end">{{ t.minimumInvestment != null ? (t.minimumInvestment | currencyBr) : '—' }}</td>
+                  <td>{{ t.expirationDate ?? '—' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    }
+  }
+</div>

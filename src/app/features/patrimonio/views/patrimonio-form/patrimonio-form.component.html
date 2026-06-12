@@ -1,0 +1,56 @@
+<div class="modal d-block" tabindex="-1" style="background:rgba(0,0,0,.5)">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ asset ? 'Editar Ativo' : 'Novo Ativo' }}</h5>
+        <button type="button" class="btn-close" (click)="cancelled.emit()"></button>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="modal-body">
+          @if (serverError()) {
+            <div class="alert alert-danger py-2 small">{{ serverError() }}</div>
+          }
+
+          <div class="mb-3">
+            <label class="form-label">Nome <span class="text-danger">*</span></label>
+            <input formControlName="nome" class="form-control"
+              [class.is-invalid]="form.get('nome')!.invalid && form.get('nome')!.touched">
+            <div class="invalid-feedback">Nome é obrigatório (máx 100 chars).</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Tipo <span class="text-danger">*</span></label>
+            <select formControlName="tipo" class="form-select" [attr.disabled]="asset ? '' : null">
+              <option value="RENDA_FIXA">Renda Fixa</option>
+              <option value="RENDA_VARIAVEL">Renda Variável</option>
+              <option value="FII">FII</option>
+              <option value="ETF">ETF</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">
+              Ticker @if (tickerRequired) { <span class="text-danger">*</span> }
+            </label>
+            <input formControlName="ticker" class="form-control text-uppercase"
+              placeholder="ex: ITUB4"
+              [class.is-invalid]="form.get('ticker')!.invalid && form.get('ticker')!.touched">
+            <div class="invalid-feedback">Ticker é obrigatório para este tipo.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Observações</label>
+            <textarea formControlName="observacoes" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cancelled.emit()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="saving()">
+            @if (saving()) { <span class="spinner-border spinner-border-sm me-1"></span> }
+            Salvar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

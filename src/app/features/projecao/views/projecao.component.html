@@ -1,0 +1,72 @@
+<div class="container-fluid py-4">
+  <h4 class="mb-4 fw-bold"><i class="bi bi-calculator me-2"></i>Projeção de Patrimônio</h4>
+
+  <div class="row g-4">
+    <div class="col-12 col-md-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <form [formGroup]="form" (ngSubmit)="calculate()">
+            <div class="mb-3">
+              <label class="form-label">Taxa mensal (% a.m.)</label>
+              <input type="number" formControlName="rate" class="form-control" step="0.01" min="0.01" max="100"
+                [class.is-invalid]="form.get('rate')!.invalid && form.get('rate')!.touched">
+              <div class="invalid-feedback">Informe uma taxa entre 0,01% e 100%.</div>
+            </div>
+            <div class="mb-4">
+              <label class="form-label">Prazo (meses)</label>
+              <input type="number" formControlName="months" class="form-control" min="1" max="600"
+                [class.is-invalid]="form.get('months')!.invalid && form.get('months')!.touched">
+              <div class="invalid-feedback">Informe entre 1 e 600 meses.</div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100" [disabled]="loading()">
+              @if (loading()) { <span class="spinner-border spinner-border-sm me-1"></span> }
+              Calcular
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-8">
+      @if (error()) { <div class="alert alert-warning">{{ error() }}</div> }
+
+      @if (result(); as r) {
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-lg-3">
+            <div class="card border-0 bg-light text-center h-100">
+              <div class="card-body">
+                <div class="text-muted small">Valor Inicial</div>
+                <div class="fw-bold">{{ r.totalLiqAtual | currencyBr }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="card border-0 bg-light text-center h-100">
+              <div class="card-body">
+                <div class="text-muted small">Valor Projetado</div>
+                <div class="fw-bold text-primary">{{ r.totalProjetado | currencyBr }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="card border-0 bg-light text-center h-100">
+              <div class="card-body">
+                <div class="text-muted small">Ganho</div>
+                <div class="fw-bold text-success">{{ r.rendimentoProjetado | currencyBr }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="card border-0 bg-light text-center h-100">
+              <div class="card-body">
+                <div class="text-muted small">Rendimento Total</div>
+                <div class="fw-bold text-success">{{ percentualProjetado(r) | percentBr }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <canvas #projChart style="max-height:300px"></canvas>
+      }
+    </div>
+  </div>
+</div>

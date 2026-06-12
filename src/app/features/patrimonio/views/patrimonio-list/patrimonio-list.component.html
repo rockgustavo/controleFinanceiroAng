@@ -1,0 +1,68 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0 fw-bold"><i class="bi bi-wallet2 me-2"></i>Ativos</h4>
+    @if (keycloak.isAdmin()) {
+      <button class="btn btn-primary" (click)="openCreate()">
+        <i class="bi bi-plus-lg me-1"></i>Novo Ativo
+      </button>
+    }
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary"></div>
+    </div>
+  } @else {
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Ticker</th>
+            <th>Obs</th>
+            @if (keycloak.isAdmin()) { <th class="text-end">Ações</th> }
+          </tr>
+        </thead>
+        <tbody>
+          @for (asset of assets(); track asset.id) {
+            <tr>
+              <td class="fw-semibold">{{ asset.nome }}</td>
+              <td>
+                <span class="badge {{ typeBadgeClass(asset.tipo) }}">
+                  {{ typeLabels[asset.tipo] }}
+                </span>
+              </td>
+              <td>{{ asset.ticker ?? '—' }}</td>
+              <td class="text-muted small">{{ asset.observacoes ?? '—' }}</td>
+              @if (keycloak.isAdmin()) {
+                <td class="text-end">
+                  <button class="btn btn-sm btn-outline-secondary me-1" (click)="openEdit(asset)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="archive(asset)">
+                    <i class="bi bi-archive"></i>
+                  </button>
+                </td>
+              }
+            </tr>
+          } @empty {
+            <tr><td colspan="5" class="text-center text-muted py-4">Nenhum ativo cadastrado.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+@if (showForm()) {
+  <app-patrimonio-form
+    [asset]="editAsset()"
+    (saved)="onFormSaved()"
+    (cancelled)="onFormCancelled()"
+  />
+}

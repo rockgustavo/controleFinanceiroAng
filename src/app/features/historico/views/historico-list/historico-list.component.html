@@ -1,0 +1,32 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0 fw-bold"><i class="bi bi-calendar3 me-2"></i>Histórico de Snapshots</h4>
+    <a class="btn btn-outline-primary btn-sm" routerLink="/historico/latest">
+      <i class="bi bi-lightning-fill me-1"></i>Mais Recente
+    </a>
+  </div>
+
+  @if (error()) { <div class="alert alert-danger">{{ error() }}</div> }
+
+  @if (loading()) {
+    <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+  } @else {
+    <div class="row g-3">
+      @for (s of snapshots(); track s.id) {
+        <div class="col-12 col-md-6 col-xl-4">
+          <a class="card card-hover text-decoration-none text-dark h-100" [routerLink]="['/historico', s.id]">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="fw-bold fs-5">{{ formatDate(s.data) }}</span>
+                <span class="badge bg-primary rounded-pill">{{ s.numeroPosicoes }} ativos</span>
+              </div>
+              <div class="fs-4 fw-semibold text-success">{{ s.totalLiq | currencyBr }}</div>
+            </div>
+          </a>
+        </div>
+      } @empty {
+        <div class="col-12 text-center text-muted py-4">Nenhum snapshot registrado.</div>
+      }
+    </div>
+  }
+</div>

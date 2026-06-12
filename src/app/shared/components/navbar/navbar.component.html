@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" routerLink="/">
+      <i class="bi bi-bar-chart-fill me-2"></i>Controle Financeiro
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/patrimonio" routerLinkActive="active">Patrimônio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/historico" routerLinkActive="active">Histórico</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/rendimento" routerLinkActive="active">Rendimento</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/mercado" routerLinkActive="active">Mercado</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/projecao" routerLinkActive="active">Projeção</a>
+        </li>
+      </ul>
+      <div class="d-flex align-items-center gap-2">
+        <span class="text-light small">
+          <i class="bi bi-person-circle me-1"></i>{{ keycloak.getUsername() }}
+          @if (keycloak.isAdmin()) {
+            <span class="badge bg-warning text-dark ms-1">ADMIN</span>
+          } @else {
+            <span class="badge bg-secondary ms-1">VIEWER</span>
+          }
+        </span>
+        <button class="btn btn-outline-light btn-sm" (click)="keycloak.logout()">
+          <i class="bi bi-box-arrow-right me-1"></i>Sair
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

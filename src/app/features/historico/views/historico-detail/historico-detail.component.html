@@ -1,0 +1,92 @@
+<div class="container-fluid py-4">
+  <a class="btn btn-sm btn-outline-secondary mb-3" routerLink="/historico">
+    <i class="bi bi-arrow-left me-1"></i>Voltar
+  </a>
+
+  @if (error()) { <div class="alert alert-danger">{{ error() }}</div> }
+
+  @if (loading()) {
+    <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+  }
+
+  @if (snapshot(); as s) {
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h4 class="mb-0 fw-bold"><i class="bi bi-camera me-2"></i>Snapshot — {{ formatDate(s.data) }}</h4>
+        @if (s.observacoes) { <p class="text-muted small mb-0">{{ s.observacoes }}</p> }
+      </div>
+      <div class="text-end">
+        <div class="text-muted small">Total líquido</div>
+        <div class="fs-3 fw-bold text-success">{{ totalLiq | currencyBr }}</div>
+      </div>
+    </div>
+
+    <!-- Market Data -->
+    @if (s.marketData) {
+      <div class="card mb-4 border-0 bg-light">
+        <div class="card-body">
+          <h6 class="card-title mb-3"><i class="bi bi-graph-up me-2"></i>Indicadores do Momento</h6>
+          <div class="row g-3 text-center">
+            <div class="col-6 col-md-2">
+              <div class="text-muted small">Selic</div>
+              <div class="fw-bold">{{ s.marketData.selic != null ? (s.marketData.selic | percentBr) : '—' }}</div>
+            </div>
+            <div class="col-6 col-md-2">
+              <div class="text-muted small">USD/BRL</div>
+              <div class="fw-bold">{{ s.marketData.usdBrl != null ? (s.marketData.usdBrl | currencyBr : 4) : '—' }}</div>
+            </div>
+            <div class="col-6 col-md-2">
+              <div class="text-muted small">IBOVESPA</div>
+              <div class="fw-bold">{{ s.marketData.ibovespa != null ? (s.marketData.ibovespa | currencyBr : 0) : '—' }}</div>
+            </div>
+            <div class="col-6 col-md-2">
+              <div class="text-muted small">IVVB11</div>
+              <div class="fw-bold">{{ s.marketData.ivvb11 != null ? (s.marketData.ivvb11 | currencyBr : 2) : '—' }}</div>
+            </div>
+            <div class="col-6 col-md-2">
+              <div class="text-muted small">IPCA</div>
+              <div class="fw-bold">{{ s.marketData.ipca != null ? (s.marketData.ipca | percentBr) : '—' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Posições -->
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Ativo</th>
+            <th>Tipo</th>
+            <th class="text-end">Qtd</th>
+            <th class="text-end">Preço Unit.</th>
+            <th class="text-end">Total Bruto</th>
+            <th class="text-end">Total Líquido</th>
+            <th>Taxa/Obs</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of s.posicoes; track p.ativoId) {
+            <tr>
+              <td class="fw-semibold">{{ p.nomeAtivo }} @if (p.ticker) { <span class="text-muted small">({{ p.ticker }})</span> }</td>
+              <td><span class="badge bg-secondary">{{ p.tipoAtivo }}</span></td>
+              <td class="text-end">{{ p.quantidade }}</td>
+              <td class="text-end">{{ p.precoUnit | currencyBr }}</td>
+              <td class="text-end">{{ p.totalBruto | currencyBr }}</td>
+              <td class="text-end fw-semibold">{{ p.totalLiq | currencyBr }}</td>
+              <td class="text-muted small">{{ p.taxa ?? '—' }}</td>
+            </tr>
+          }
+        </tbody>
+        <tfoot class="table-light">
+          <tr>
+            <td colspan="5" class="fw-bold">Total</td>
+            <td class="text-end fw-bold text-success">{{ totalLiq | currencyBr }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  }
+</div>

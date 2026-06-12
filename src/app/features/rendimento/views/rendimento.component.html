@@ -1,0 +1,94 @@
+<div class="container-fluid py-4">
+  <h4 class="mb-4 fw-bold"><i class="bi bi-graph-up-arrow me-2"></i>Rendimento</h4>
+
+  <!-- Controles -->
+  <div class="row g-3 mb-4 align-items-end">
+    <div class="col-12 col-md-5">
+      <label class="form-label small text-muted">Snapshot</label>
+      <select class="form-select" [(ngModel)]="selectedId" (ngModelChange)="load()">
+        @for (s of snapshots(); track s.id) {
+          <option [value]="s.id">{{ formatDate(s.data) }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-auto">
+      <label class="form-label small text-muted">Modo</label>
+      <div class="btn-group d-block">
+        <button class="btn btn-sm" [class.btn-primary]="mode()==='simple'" [class.btn-outline-primary]="mode()!=='simple'" (click)="toggleMode('simple')">Simples</button>
+        <button class="btn btn-sm" [class.btn-primary]="mode()==='cagr'" [class.btn-outline-primary]="mode()!=='cagr'" (click)="toggleMode('cagr')">CAGR</button>
+      </div>
+    </div>
+  </div>
+
+  @if (error()) { <div class="alert alert-warning">{{ error() }}</div> }
+
+  @if (loading()) {
+    <div class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+  } @else {
+    @if (returns(); as r) {
+      <!-- KPIs -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+          <div class="card border-0 bg-light h-100">
+            <div class="card-body text-center">
+              <div class="text-muted small">Período anterior</div>
+              <div class="fw-semibold">{{ r.dataAnterior ? formatDate(r.dataAnterior) : '—' }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="card border-0 bg-light h-100">
+            <div class="card-body text-center">
+              <div class="text-muted small">Total anterior</div>
+              <div class="fw-semibold">{{ r.totalLiqAnterior | currencyBr }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="card border-0 bg-light h-100">
+            <div class="card-body text-center">
+              <div class="text-muted small">Rendimento absoluto</div>
+              <div class="fw-bold fs-5" [class]="returnClass(r.rendimentoAbsoluto)">
+                {{ r.rendimentoAbsoluto | currencyBr }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="card border-0 bg-light h-100">
+            <div class="card-body text-center">
+              <div class="text-muted small">Rendimento % ({{ mode() === 'cagr' ? 'CAGR a.a.' : 'período' }})</div>
+              <div class="fw-bold fs-5" [class]="returnClass(r.rendimentoPercentual)">
+                {{ r.rendimentoPercentual | percentBr }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  }
+
+  <!-- Alocação -->
+  @if (allocation().length > 0) {
+    <div class="row g-4 align-items-center">
+      <div class="col-12 col-md-5">
+        <h6 class="text-muted">Concentração por Tipo</h6>
+        <canvas #allocationChart style="max-height:260px"></canvas>
+      </div>
+      <div class="col-12 col-md-7">
+        <table class="table table-sm">
+          <thead><tr><th>Tipo</th><th class="text-end">Total</th><th class="text-end">%</th></tr></thead>
+          <tbody>
+            @for (a of allocation(); track a.tipo) {
+              <tr>
+                <td>{{ tipoLabel(a.tipo) }}</td>
+                <td class="text-end">{{ a.totalLiq | currencyBr }}</td>
+                <td class="text-end">{{ a.percentual | percentBr }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
