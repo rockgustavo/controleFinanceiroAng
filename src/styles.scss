@@ -1,6 +1,32 @@
+// Transição global de tema — todos os elementos Bootstrap adaptam suavemente
+*,
+*::before,
+*::after {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+// Exceção: animações de interação (hover, transform) não devem ser afetadas
+a,
+button,
+.btn,
+.nav-link,
+.card-hover {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
 html, body {
   height: 100%;
-  background-color: #f8f9fa;
+  background-color: var(--bs-body-bg);
 }
 
 main {
@@ -8,7 +34,6 @@ main {
 }
 
 .card-hover {
-  transition: box-shadow 0.2s, transform 0.2s;
   &:hover {
     box-shadow: 0 4px 12px rgba(0,0,0,.12);
     transform: translateY(-2px);
@@ -17,4 +42,53 @@ main {
 
 .table > :not(caption) > * > * {
   vertical-align: middle;
+}
+
+// ─── Botão de tema — design chamativo com cores por modo ─────────────────────
+
+// Modo escuro disponível → botão tem visual de "noite" (índigo escuro)
+.theme-toggle-dark {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #c8d8ff !important;
+  border: 1.5px solid #3a5099;
+
+  &:hover {
+    background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+    border-color: #6890e0;
+    box-shadow: 0 0 10px rgba(100, 140, 240, 0.4);
+  }
+}
+
+// Modo claro disponível → botão tem visual de "dia" (âmbar/dourado)
+.theme-toggle-light {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  color: #78350f !important;
+  border: 1.5px solid #d97706;
+
+  &:hover {
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+    border-color: #92400e;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+  }
+}
+
+// ─── Botão de tema ───────────────────────────────────────────────────────────
+.theme-toggle-nav {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+
+  .theme-toggle-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+  }
+
+  svg {
+    pointer-events: none;
+    flex-shrink: 0;
+  }
+
 }

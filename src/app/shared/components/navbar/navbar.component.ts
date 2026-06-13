@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { KeycloakService } from '../../../core/auth/keycloak.service';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,4 +11,5 @@ import { KeycloakService } from '../../../core/auth/keycloak.service';
 })
 export class NavbarComponent {
   protected keycloak = inject(KeycloakService);
+  protected theme = inject(ThemeService);
 }

@@ -33,7 +33,7 @@
       @if (result(); as r) {
         <div class="row g-3 mb-4">
           <div class="col-6 col-lg-3">
-            <div class="card border-0 bg-light text-center h-100">
+            <div class="card border-0 bg-body-secondary text-center h-100">
               <div class="card-body">
                 <div class="text-muted small">Valor Inicial</div>
                 <div class="fw-bold">{{ r.totalLiqAtual | currencyBr }}</div>
@@ -41,7 +41,7 @@
             </div>
           </div>
           <div class="col-6 col-lg-3">
-            <div class="card border-0 bg-light text-center h-100">
+            <div class="card border-0 bg-body-secondary text-center h-100">
               <div class="card-body">
                 <div class="text-muted small">Valor Projetado</div>
                 <div class="fw-bold text-primary">{{ r.totalProjetado | currencyBr }}</div>
@@ -49,7 +49,7 @@
             </div>
           </div>
           <div class="col-6 col-lg-3">
-            <div class="card border-0 bg-light text-center h-100">
+            <div class="card border-0 bg-body-secondary text-center h-100">
               <div class="card-body">
                 <div class="text-muted small">Ganho</div>
                 <div class="fw-bold text-success">{{ r.rendimentoProjetado | currencyBr }}</div>
@@ -57,7 +57,7 @@
             </div>
           </div>
           <div class="col-6 col-lg-3">
-            <div class="card border-0 bg-light text-center h-100">
+            <div class="card border-0 bg-body-secondary text-center h-100">
               <div class="card-body">
                 <div class="text-muted small">Rendimento Total</div>
                 <div class="fw-bold text-success">{{ percentualProjetado(r) | percentBr }}</div>

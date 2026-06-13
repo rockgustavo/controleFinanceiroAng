@@ -3,6 +3,26 @@
     <a class="navbar-brand fw-bold" routerLink="/">
       <i class="bi bi-bar-chart-fill me-2"></i>Controle Financeiro
     </a>
+    <!-- Botão de tema — mobile, entre brand e hambúrguer -->
+    <button class="theme-toggle-nav d-flex d-lg-none align-items-center gap-1 ms-auto me-2"
+            [class.theme-toggle-dark]="!theme.isDark"
+            [class.theme-toggle-light]="theme.isDark"
+            (click)="theme.toggle()"
+            [title]="theme.isDark ? 'Mudar para modo claro' : 'Mudar para modo escuro'"
+            aria-label="Alternar tema">
+      @if (theme.isDark) {
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+      } @else {
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      }
+    </button>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -25,6 +45,25 @@
         </li>
       </ul>
       <div class="d-flex align-items-center gap-2">
+        <!-- Botão de tema — antes do usuário, visível só no desktop -->
+        <button class="theme-toggle-nav d-none d-lg-flex align-items-center gap-1"
+                [class.theme-toggle-dark]="!theme.isDark"
+                [class.theme-toggle-light]="theme.isDark"
+                (click)="theme.toggle()"
+                [title]="theme.isDark ? 'Mudar para modo claro' : 'Mudar para modo escuro'"
+                aria-label="Alternar tema">
+          @if (theme.isDark) {
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"/>
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          }
+        </button>
+
         <span class="text-light small">
           <i class="bi bi-person-circle me-1"></i>{{ keycloak.getUsername() }}
           @if (keycloak.isAdmin()) {
