@@ -17,7 +17,7 @@
           <a class="card card-hover text-decoration-none text-dark h-100" [routerLink]="['/historico', s.id]">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-start mb-2">
-                <span class="fw-bold fs-5">{{ formatDate(s.data) }}</span>
+                <span class="fw-bold fs-5">{{ s.data | dateBr }}</span>
                 <span class="badge bg-primary rounded-pill">{{ s.numeroPosicoes }} ativos</span>
               </div>
               <div class="fs-4 fw-semibold text-success">{{ s.totalLiq | currencyBr }}</div>

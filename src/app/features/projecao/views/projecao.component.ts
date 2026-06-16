@@ -1,6 +1,7 @@
 import { Component, inject, signal, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProjecaoService } from '../services/projecao.service';
+import { apiErrorMessage } from '../../../core/http/api-error';
 import { ProjecaoResponse } from '../../../core/models/returns.model';
 import { CurrencyBrPipe } from '../../../shared/pipes/currency-br.pipe';
 import { PercentBrPipe } from '../../../shared/pipes/percent-br.pipe';
@@ -42,7 +43,7 @@ export class ProjecaoComponent implements AfterViewChecked {
     this.svc.getProjection(rate!, months!).subscribe({
       next: r => { this.result.set(r); this.loading.set(false); this.pendingChart = true; },
       error: err => {
-        this.error.set(err?.error?.error?.message ?? 'Erro ao calcular projeção.');
+        this.error.set(apiErrorMessage(err, 'Erro ao calcular projeção.'));
         this.loading.set(false);
       }
     });

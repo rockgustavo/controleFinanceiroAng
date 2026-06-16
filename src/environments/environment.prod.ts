@@ -2,8 +2,8 @@ export const environment = {
   production: true,
   apiUrl: '/api',
   keycloak: {
-    url: '/auth',
+    url: 'http://localhost:8180',
     realm: 'financeiro',
-    clientId: 'frontend'
+    clientId: 'financeiro-frontend'
   }
 };

@@ -3,11 +3,12 @@ import { RouterLink } from '@angular/router';
 import { HistoricoService } from '../../services/historico.service';
 import { SnapshotSummary } from '../../../../core/models/snapshot.model';
 import { CurrencyBrPipe } from '../../../../shared/pipes/currency-br.pipe';
+import { DateBrPipe } from '../../../../shared/pipes/date-br.pipe';
 
 @Component({
   selector: 'app-historico-list',
   standalone: true,
-  imports: [RouterLink, CurrencyBrPipe],
+  imports: [RouterLink, CurrencyBrPipe, DateBrPipe],
   templateUrl: './historico-list.component.html'
 })
 export class HistoricoListComponent implements OnInit {
@@ -22,9 +23,5 @@ export class HistoricoListComponent implements OnInit {
       next: s => { this.snapshots.set(s); this.loading.set(false); },
       error: () => { this.error.set('Erro ao carregar snapshots.'); this.loading.set(false); }
     });
-  }
-
-  formatDate(date: string): string {
-    return new Date(date + 'T00:00:00').toLocaleDateString('pt-BR');
   }
 }

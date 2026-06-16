@@ -6,6 +6,8 @@ import { ReturnsResponse, AllocationItem } from '../../../core/models/returns.mo
 import { ASSET_TYPE_LABELS, AssetType } from '../../../core/models/asset.model';
 import { CurrencyBrPipe } from '../../../shared/pipes/currency-br.pipe';
 import { PercentBrPipe } from '../../../shared/pipes/percent-br.pipe';
+import { DateBrPipe } from '../../../shared/pipes/date-br.pipe';
+import { apiErrorMessage } from '../../../core/http/api-error';
 import { Chart, ArcElement, DoughnutController, Tooltip, Legend } from 'chart.js';
 
 Chart.register(ArcElement, DoughnutController, Tooltip, Legend);
@@ -13,7 +15,7 @@ Chart.register(ArcElement, DoughnutController, Tooltip, Legend);
 @Component({
   selector: 'app-rendimento',
   standalone: true,
-  imports: [FormsModule, CurrencyBrPipe, PercentBrPipe],
+  imports: [FormsModule, CurrencyBrPipe, PercentBrPipe, DateBrPipe],
   templateUrl: './rendimento.component.html'
 })
 export class RendimentoComponent implements OnInit, AfterViewInit {
@@ -53,8 +55,7 @@ export class RendimentoComponent implements OnInit, AfterViewInit {
     this.svc.getReturns(id, this.mode()).subscribe({
       next: r => { this.returns.set(r); this.loading.set(false); },
       error: err => {
-        const msg = err?.error?.error?.message ?? 'Erro ao carregar rendimento.';
-        this.error.set(msg);
+        this.error.set(apiErrorMessage(err, 'Erro ao carregar rendimento.'));
         this.loading.set(false);
       }
     });
@@ -97,7 +98,4 @@ export class RendimentoComponent implements OnInit, AfterViewInit {
     return value >= 0 ? 'text-success' : 'text-danger';
   }
 
-  formatDate(date: string): string {
-    return new Date(date + 'T00:00:00').toLocaleDateString('pt-BR');
-  }
 }

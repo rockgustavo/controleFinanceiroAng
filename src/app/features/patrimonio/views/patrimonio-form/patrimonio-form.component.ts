@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { PatrimonioService } from '../../services/patrimonio.service';
+import { apiErrorMessage } from '../../../../core/http/api-error';
 import { Asset, AssetType, CreateAssetRequest, UpdateAssetRequest } from '../../../../core/models/asset.model';
 
 const TICKER_TYPES: AssetType[] = ['RENDA_VARIAVEL', 'FII', 'ETF'];
@@ -74,7 +75,7 @@ export class PatrimonioFormComponent implements OnInit {
       next: () => { this.saving.set(false); this.saved.emit(); },
       error: (err) => {
         this.saving.set(false);
-        this.serverError.set(err?.error?.error?.message ?? 'Erro ao salvar.');
+        this.serverError.set(apiErrorMessage(err, 'Erro ao salvar.'));
       }
     });
   }

@@ -47,8 +47,10 @@ src/app/
 ├── core/                  ← Singletons — carregados uma vez
 │   ├── auth/
 │   │   ├── keycloak.service.ts    ← login, logout, token, roles
-│   │   ├── auth.guard.ts          ← protege rotas que exigem ADMIN
 │   │   └── auth.interceptor.ts    ← injeta Authorization: Bearer em toda requisição
+│   ├── http/
+│   │   ├── unwrap.ts              ← operadores RxJS que desempacotam o envelope ApiResponse
+│   │   └── api-error.ts           ← extrai a mensagem de erro padronizada da API
 │   └── services/
 │       └── theme.service.ts       ← dark/light mode — localStorage + data-bs-theme
 │
@@ -57,7 +59,8 @@ src/app/
 │   │   └── navbar/        ← Navbar responsiva com toggle de tema e menu colapsável
 │   └── pipes/
 │       ├── currency-br.pipe.ts    ← formata valores em BRL (pt-BR)
-│       └── percent-br.pipe.ts     ← formata percentuais em pt-BR
+│       ├── percent-br.pipe.ts     ← formata percentuais em pt-BR
+│       └── date-br.pipe.ts        ← formata datas ISO em pt-BR
 │
 └── features/              ← Módulos de funcionalidade (lazy loaded)
     ├── patrimonio/        ← Listagem, criação e edição de ativos
@@ -80,7 +83,7 @@ Usuário ──login──▶ Keycloak ──JWT──▶ Angular (armazena em m
 ```
 
 - Token **nunca** vai para `localStorage` — fica em memória no `KeycloakService`
-- `AuthGuard` bloqueia rotas de escrita para usuários sem role `ADMIN`
+- Escrita restrita a ADMIN em duas camadas: a UI esconde as ações de criação/edição via `keycloak.isAdmin()` e o backend garante com `@PreAuthorize('ADMIN')`
 - Sessão expirada: interceptor detecta `401` e redireciona para o login do Keycloak
 
 | Role | Acesso |
@@ -135,6 +138,8 @@ docker compose up --build
 | `admin@financeiro.dev` | `admin123` | ADMIN — acesso completo |
 | `viewer@financeiro.dev` | `viewer123` | VIEWER — somente leitura |
 
+> Esses usuários são provisionados automaticamente pelo Keycloak na primeira subida (`--import-realm`) — sem cadastro manual. O frontend usa o client `financeiro-frontend` e fala com o Keycloak em `http://localhost:8180` (dev e Docker).
+
 ---
 
 ## Testes
@@ -147,14 +152,13 @@ ng test
 ng test --watch=false --browsers=ChromeHeadless
 ```
 
-**Cobertura:** 42 testes · 0 falhas
+**Cobertura:** 44 testes · 0 falhas
 
 Camadas cobertas:
 
-- Pipes (`CurrencyBrPipe`, `PercentBrPipe`) — formatação de valores nulos, zero, negativos e decimais customizados
+- Pipes (`CurrencyBrPipe`, `PercentBrPipe`, `DateBrPipe`) — formatação de valores nulos, zero, negativos, decimais customizados e datas ISO
 - Services de todas as features (`patrimonio`, `rendimento`, `projecao`, `historico`, `mercado`) — GET, POST, PATCH, DELETE com `HttpTestingController`
 - `AuthInterceptor` — injeção do token Bearer e logout automático no `401`
-- `AuthGuard` — bloqueio de rota sem role ADMIN
 - `AppComponent` — renderização de navbar e router-outlet
 
 ---

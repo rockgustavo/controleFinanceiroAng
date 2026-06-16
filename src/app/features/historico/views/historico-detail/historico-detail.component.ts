@@ -4,11 +4,12 @@ import { HistoricoService } from '../../services/historico.service';
 import { SnapshotDetail } from '../../../../core/models/snapshot.model';
 import { CurrencyBrPipe } from '../../../../shared/pipes/currency-br.pipe';
 import { PercentBrPipe } from '../../../../shared/pipes/percent-br.pipe';
+import { DateBrPipe } from '../../../../shared/pipes/date-br.pipe';
 
 @Component({
   selector: 'app-historico-detail',
   standalone: true,
-  imports: [RouterLink, CurrencyBrPipe, PercentBrPipe],
+  imports: [RouterLink, CurrencyBrPipe, PercentBrPipe, DateBrPipe],
   templateUrl: './historico-detail.component.html'
 })
 export class HistoricoDetailComponent implements OnInit {
@@ -30,9 +31,5 @@ export class HistoricoDetailComponent implements OnInit {
 
   get totalLiq(): number {
     return this.snapshot()?.posicoes.reduce((acc, p) => acc + p.totalLiq, 0) ?? 0;
-  }
-
-  formatDate(date: string): string {
-    return new Date(date + 'T00:00:00').toLocaleDateString('pt-BR');
   }
 }

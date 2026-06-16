@@ -7,7 +7,7 @@
       <label class="form-label small text-muted">Snapshot</label>
       <select class="form-select" [(ngModel)]="selectedId" (ngModelChange)="load()">
         @for (s of snapshots(); track s.id) {
-          <option [value]="s.id">{{ formatDate(s.data) }}</option>
+          <option [value]="s.id">{{ s.data | dateBr }}</option>
         }
       </select>
     </div>
@@ -32,7 +32,7 @@
           <div class="card border-0 bg-body-secondary h-100">
             <div class="card-body text-center">
               <div class="text-muted small">Período anterior</div>
-              <div class="fw-semibold">{{ r.dataAnterior ? formatDate(r.dataAnterior) : '—' }}</div>
+              <div class="fw-semibold">{{ r.dataAnterior | dateBr }}</div>
             </div>
           </div>
         </div>
