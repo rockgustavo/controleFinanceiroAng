@@ -1,15 +1,17 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
+
 import { KeycloakService } from '../../../core/auth/keycloak.service';
 import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
-  selector: 'app-navbar',
+  selector: 'app-topbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
-  templateUrl: './navbar.component.html'
+  templateUrl: './topbar.component.html',
+  styleUrl: './topbar.component.scss'
 })
-export class NavbarComponent {
+export class TopbarComponent {
+  @Output() toggleSidebar = new EventEmitter<void>();
+
   protected keycloak = inject(KeycloakService);
   protected theme = inject(ThemeService);
 }

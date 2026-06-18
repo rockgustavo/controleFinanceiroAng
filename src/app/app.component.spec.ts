@@ -26,11 +26,12 @@ describe('AppComponent', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('deve renderizar a navbar e o router-outlet', () => {
+  it('deve renderizar a sidebar, a topbar e o router-outlet', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
-    expect(el.querySelector('app-navbar')).toBeTruthy();
+    expect(el.querySelector('app-sidebar')).toBeTruthy();
+    expect(el.querySelector('app-topbar')).toBeTruthy();
     expect(el.querySelector('router-outlet')).toBeTruthy();
   });
 });

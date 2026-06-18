@@ -23,9 +23,9 @@
           <tr>
             <th>Nome</th>
             <th>Tipo</th>
-            <th>Ticker</th>
-            <th>Obs</th>
-            @if (keycloak.isAdmin()) { <th class="text-end">Ações</th> }
+            <th class="d-none d-sm-table-cell">Ticker</th>
+            <th class="d-none d-md-table-cell">Obs</th>
+            @if (keycloak.isAdmin()) { <th class="text-end" style="width:90px">Ações</th> }
           </tr>
         </thead>
         <tbody>
@@ -37,16 +37,18 @@
                   {{ typeLabels[asset.tipo] }}
                 </span>
               </td>
-              <td>{{ asset.ticker ?? '—' }}</td>
-              <td class="text-muted small">{{ asset.observacoes ?? '—' }}</td>
+              <td class="d-none d-sm-table-cell">{{ asset.ticker ?? '—' }}</td>
+              <td class="d-none d-md-table-cell text-muted small">{{ asset.observacoes ?? '—' }}</td>
               @if (keycloak.isAdmin()) {
-                <td class="text-end">
-                  <button class="btn btn-sm btn-outline-secondary me-1" (click)="openEdit(asset)">
-                    <i class="bi bi-pencil"></i>
-                  </button>
-                  <button class="btn btn-sm btn-outline-danger" (click)="archive(asset)">
-                    <i class="bi bi-archive"></i>
-                  </button>
+                <td>
+                  <div class="d-flex gap-1 justify-content-end flex-nowrap">
+                    <button class="btn btn-sm btn-outline-secondary" (click)="openEdit(asset)" title="Editar">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="archive(asset)" title="Arquivar">
+                      <i class="bi bi-archive"></i>
+                    </button>
+                  </div>
                 </td>
               }
             </tr>

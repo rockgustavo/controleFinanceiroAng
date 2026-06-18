@@ -1,4 +1,77 @@
-// Transição global de tema — todos os elementos Bootstrap adaptam suavemente
+// ─── Tokens de tema — paleta Grafite & Teal ──────────────────────────────────
+:root {
+  --sidebar-width: 248px;
+  --sidebar-width-collapsed: 72px;
+  --topbar-height: 60px;
+
+  --sidebar-bg: #22303a;
+  --sidebar-text: #cbd5e1;
+  --sidebar-text-muted: #8da2b5;
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
+  --sidebar-active: #14b8a6;
+  --sidebar-active-bg: rgba(20, 184, 166, 0.14);
+  --sidebar-brand: #f1f5f9;
+
+  --topbar-bg: #ffffff;
+  --topbar-border: #e2e8f0;
+  --surface: #ffffff;
+
+  --bs-primary: #0f766e;
+  --bs-primary-rgb: 15, 118, 110;
+  --bs-body-bg: #f8fafc;
+  --bs-card-bg: #ffffff;
+  --bs-link-color: #0f766e;
+  --bs-link-color-rgb: 15, 118, 110;
+  --bs-link-hover-color: #0b5751;
+  --bs-link-hover-color-rgb: 11, 87, 81;
+
+  --bs-body-font-family: "Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+[data-bs-theme="dark"] {
+  --sidebar-bg: #1b2730;
+  --sidebar-text: #cbd5e1;
+  --sidebar-text-muted: #7d93a6;
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
+  --sidebar-active: #2dd4bf;
+  --sidebar-active-bg: rgba(45, 212, 191, 0.16);
+
+  --topbar-bg: #1e293b;
+  --topbar-border: #334155;
+  --surface: #1e293b;
+
+  --bs-primary: #14b8a6;
+  --bs-primary-rgb: 20, 184, 166;
+  --bs-body-bg: #0f172a;
+  --bs-card-bg: #1e293b;
+  --bs-link-color: #2dd4bf;
+  --bs-link-color-rgb: 45, 212, 191;
+  --bs-link-hover-color: #5eead4;
+  --bs-link-hover-color-rgb: 94, 234, 212;
+}
+
+// ─── Retema dos botões/badges que usam variáveis próprias do Bootstrap ────────
+.btn-primary {
+  --bs-btn-bg: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-bg: #0d655e;
+  --bs-btn-hover-border-color: #0d655e;
+  --bs-btn-active-bg: #0b5751;
+  --bs-btn-active-border-color: #0b5751;
+  --bs-btn-disabled-bg: var(--bs-primary);
+  --bs-btn-disabled-border-color: var(--bs-primary);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-bg: var(--bs-primary);
+  --bs-btn-hover-border-color: var(--bs-primary);
+  --bs-btn-active-bg: var(--bs-primary);
+  --bs-btn-active-border-color: var(--bs-primary);
+}
+
+// ─── Transição global de tema — todos os elementos Bootstrap adaptam ──────────
 *,
 *::before,
 *::after {
@@ -9,7 +82,6 @@
     box-shadow 0.2s ease;
 }
 
-// Exceção: animações de interação (hover, transform) não devem ser afetadas
 a,
 button,
 .btn,
@@ -27,15 +99,81 @@ button,
 html, body {
   height: 100%;
   background-color: var(--bs-body-bg);
+  font-family: var(--bs-body-font-family);
 }
 
-main {
-  min-height: calc(100vh - 56px);
+// ─── Shell — sidebar fixa + área principal ────────────────────────────────────
+.app-shell {
+  min-height: 100vh;
+}
+
+app-sidebar.app-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  z-index: 1040;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width 0.2s ease, transform 0.2s ease;
+}
+
+.app-shell.collapsed app-sidebar.app-sidebar {
+  width: var(--sidebar-width-collapsed);
+}
+
+.app-main {
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.2s ease;
+}
+
+.app-shell.collapsed .app-main {
+  margin-left: var(--sidebar-width-collapsed);
+}
+
+app-topbar.app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.app-content {
+  flex: 1 1 auto;
+}
+
+// ─── Responsivo — mobile usa bottom nav, sidebar fica oculta ──────────────────
+@media (max-width: 991.98px) {
+  app-sidebar.app-sidebar {
+    display: none;
+  }
+
+  .app-main,
+  .app-shell.collapsed .app-main {
+    margin-left: 0;
+  }
+
+  .app-content {
+    padding-bottom: 64px;
+  }
+}
+
+// ─── Polimento global ─────────────────────────────────────────────────────────
+.card {
+  background-color: var(--bs-card-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.65rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
 .card-hover {
   &:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,.12);
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
     transform: translateY(-2px);
   }
 }
@@ -44,9 +182,12 @@ main {
   vertical-align: middle;
 }
 
-// ─── Botão de tema — design chamativo com cores por modo ─────────────────────
+.page-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
 
-// Modo escuro disponível → botão tem visual de "noite" (índigo escuro)
+// ─── Botão de tema — design chamativo com cores por modo ─────────────────────
 .theme-toggle-dark {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   color: #c8d8ff !important;
@@ -59,7 +200,6 @@ main {
   }
 }
 
-// Modo claro disponível → botão tem visual de "dia" (âmbar/dourado)
 .theme-toggle-light {
   background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
   color: #78350f !important;
@@ -72,7 +212,6 @@ main {
   }
 }
 
-// ─── Botão de tema ───────────────────────────────────────────────────────────
 .theme-toggle-nav {
   padding: 4px 10px;
   border-radius: 20px;
@@ -90,5 +229,4 @@ main {
     pointer-events: none;
     flex-shrink: 0;
   }
-
 }
