@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   apiUrl: '/api',
   keycloak: {
-    url: 'https://lemur-12.cloud-iam.com/auth',
+    url: 'http://localhost:8180',
     realm: 'financeiro',
     clientId: 'financeiro-frontend'
   }

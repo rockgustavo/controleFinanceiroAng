@@ -116,11 +116,14 @@ ng serve --open
 
 > O backend e o Keycloak precisam estar no ar. Siga o `README` do [backend](https://github.com/rockgustavo/controleFinanceiroSpring) para subir a infraestrutura com `docker compose`.
 
-### Build de produção
+### Build
 
 ```bash
-ng build --configuration production
-# Artefatos em dist/ — servidos pelo Nginx no compose completo
+# Produção (Vercel / Cloud-IAM) — configuração padrão
+ng build
+
+# Docker Compose (Nginx + Keycloak local)
+ng build --configuration docker
 ```
 
 ### Subida completa via Docker Compose
@@ -139,6 +142,39 @@ docker compose up --build
 | `viewer@financeiro.dev` | `viewer123` | VIEWER — somente leitura |
 
 > Esses usuários são provisionados automaticamente pelo Keycloak na primeira subida (`--import-realm`) — sem cadastro manual. O frontend usa o client `financeiro-frontend` e fala com o Keycloak em `http://localhost:8180` (dev e Docker).
+
+---
+
+## Deploy em Produção (Free Tier)
+
+Em produção o frontend roda na **Vercel** (build + CDN), separado da topologia local do `docker compose`. O `vercel.json` reescreve `/api/*` para o backend no Render (server-side, sem CORS); o login OIDC vai direto ao Keycloak gerenciado no Cloud-IAM.
+
+### Infraestrutura
+
+| Camada | Serviço | Plano | Papel |
+|---|---|---|---|
+| Frontend | Vercel | Hobby | Build do Angular + CDN; proxy `/api/*` → Render |
+| Backend | Render | Free | API Spring Boot ([repo](https://github.com/rockgustavo/controleFinanceiroSpring)) |
+| Identity Provider | Cloud-IAM | Freemium | Keycloak gerenciado — login OIDC |
+
+### URLs de produção
+
+| Serviço | URL |
+|---|---|
+| Frontend | https://controle-financeiro-ang.vercel.app |
+| API / Swagger | https://controlefinanceirospring.onrender.com/docs |
+
+> Para testar a API diretamente: acesse o **Swagger UI** acima, clique em **Authorize** e faça login com suas credenciais do Keycloak. O token é injetado automaticamente em todas as chamadas.
+
+### Três ambientes de build
+
+Cada ambiente troca o `environment.*.ts` via `angular.json`, mantendo dev, Docker e produção funcionais ao mesmo tempo:
+
+| Ambiente | Comando | Keycloak | API |
+|---|---|---|---|
+| **dev** | `ng serve` | `http://localhost:8180` | `http://localhost:8088/api` |
+| **docker** | `ng build --configuration docker` | `http://localhost:8180` | `/api` (Nginx) |
+| **production** | `ng build` (padrão — usado na Vercel) | Cloud-IAM (HTTPS) | `/api` (Vercel → Render) |
 
 ---
 

@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --silent
 COPY . .
-RUN npm run build -- --configuration production
+RUN npm run build -- --configuration docker
 
 FROM nginx:alpine AS runtime
 RUN addgroup -S app && adduser -S app -G app
